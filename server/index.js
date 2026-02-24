@@ -35,9 +35,9 @@ app.use(cookieParser());
 
 // CORS configuration
 const allowedOrigins = [
-  'https://game-lovat-theta.vercel.app',
+  'https://mathblitz-grg9.onrender.com',
   'http://localhost:5173',
-  'https://mathblitz.onrender.com'
+  'https://mathblitz-two.vercel.app/'
 ];
 
 app.use((req, res, next) => {
