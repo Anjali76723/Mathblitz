@@ -22,12 +22,19 @@ export default function AuthSuccess() {
       try {
         const base = import.meta.env.VITE_API_URL || "http://localhost:5000";
         const res = await fetch(`${base}/api/me`, {
-          headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+          headers: { 
+            Authorization: `Bearer ${token}`, 
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          },
           credentials: 'include',
         });
 
         // Read text first to avoid JSON.parse crash on HTML
         const text = await res.text();
+        console.log("AuthSuccess /me response status:", res.status);
+        console.log("AuthSuccess /me response text:", text.substring(0, 200));
+        
         let data;
         try {
           data = JSON.parse(text);
@@ -42,6 +49,7 @@ export default function AuthSuccess() {
           // reload to ensure socket picks up new token from localStorage
           window.location.replace("/");
         } else {
+          console.error("AuthSuccess: No user in response", data);
           navigate("/login");
         }
       } catch (err) {

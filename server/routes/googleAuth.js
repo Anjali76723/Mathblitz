@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const router = express.Router();
-const frontend = (process.env.FRONTEND_URL || "http://localhost:5173").replace(/\/$/, "");
+const frontend = (process.env.FRONTEND_URL || process.env.CORS_ORIGIN || "http://localhost:5173").replace(/\/$/, "");
 
 // Start OAuth (unchanged)
 router.get(

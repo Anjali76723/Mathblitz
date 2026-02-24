@@ -37,7 +37,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   'https://mathblitz-grg9.onrender.com',
   'http://localhost:5173',
-  'https://mathblitz-two.vercel.app/'
+  'https://mathblitz-two.vercel.app'
 ];
 
 app.use((req, res, next) => {

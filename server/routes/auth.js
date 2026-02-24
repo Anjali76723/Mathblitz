@@ -10,10 +10,7 @@ router.post("/signup", signup);
 router.post("/login", login);
 
 // Protected route - requires valid JWT token
-router.get(
-  "/me",
-  passport.authenticate('jwt', { session: false }),
-  getMe
-);
+// Note: getMe handles token verification internally
+router.get("/me", getMe);
 
 export default router;
