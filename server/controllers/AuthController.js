@@ -101,24 +101,40 @@ export async function login(req, res) {
  */
 export async function getMe(req, res) {
   try {
+    console.log("=== /api/me called ===");
+    console.log("Headers:", JSON.stringify(req.headers, null, 2));
+    console.log("Cookies:", req.cookies);
+    
     let token = null;
     const authHeader = req.headers.authorization;
     if (authHeader && authHeader.startsWith("Bearer ")) {
       token = authHeader.slice(7);
+      console.log("Token from Authorization header:", token.substring(0, 20) + "...");
     }
     if (!token) {
       token = req.cookies?.token;
+      console.log("Token from cookies:", token ? token.substring(0, 20) + "..." : "none");
     }
     if (!token) {
+      console.log("No token found!");
       return res.status(401).json({ error: "Not authenticated" });
     }
 
     const payload = jwt.verify(token, JWT_SECRET);
-    if (!payload?.id) return res.status(401).json({ error: "Invalid token" });
+    console.log("Token verified, payload:", payload);
+    
+    if (!payload?.id) {
+      console.log("No user ID in token payload");
+      return res.status(401).json({ error: "Invalid token" });
+    }
 
     const user = await User.findById(payload.id).select("-__v -password");
-    if (!user) return res.status(401).json({ error: "User not found" });
+    if (!user) {
+      console.log("User not found in database");
+      return res.status(401).json({ error: "User not found" });
+    }
 
+    console.log("User found:", user.email);
     return res.json({
       user: {
         _id: user._id,

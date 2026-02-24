@@ -17,6 +17,7 @@ router.get(
 
 // Callback — custom callback to log error body
 router.get("/google/callback", (req, res, next) => {
+  console.log("=== Google OAuth callback triggered ===");
   passport.authenticate("google", { session: false }, (err, user, info) => {
     if (err) {
       console.error("Google OAuth callback error:", err);
@@ -36,11 +37,14 @@ router.get("/google/callback", (req, res, next) => {
       return res.redirect(`${frontend}/login`);
     }
 
+    console.log("Google OAuth successful for user:", user.email);
     const token = jwt.sign(
       { id: user._id, email: user.email, name: user.name },
       process.env.JWT_SECRET,
       { expiresIn: "7d" }
     );
+    console.log("Generated token (first 20 chars):", token.substring(0, 20));
+    console.log("Redirecting to:", `${frontend}/auth/success?token=${token.substring(0, 20)}...`);
     return res.redirect(`${frontend}/auth/success?token=${token}`);
   })(req, res, next);
 });
